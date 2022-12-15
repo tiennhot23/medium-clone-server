@@ -1,7 +1,9 @@
 const user = {
   usernameLengthMin: 3,
   usernameLengthMax: 15,
-  passwordRegex: /[0-9]{6}$/,
+  passwordRegex: /[0-9]{3}$/,
+  roleRegex: /author|admin/,
+  stateRegex: /0|1/,
 };
 
 const joiMessageTemplate = {
@@ -36,6 +38,9 @@ const joiMessageTemplate = {
   'string.uriCustomScheme': '{{#label}} must be a valid uri with a scheme matching the {{#scheme}} pattern',
   'string.uriRelativeOnly': '{{#label}} must be a valid relative uri',
   'string.uppercase': '{{#label}} must only contain uppercase characters',
+  'any.required': '{#label} is required',
+  'object.missing': 'Required {#peers}',
+  'object.with': '{#main} requires {#peer}',
 };
 
 module.exports = { user, joiMessageTemplate };

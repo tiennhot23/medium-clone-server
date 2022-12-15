@@ -1,14 +1,14 @@
-/* eslint-disable func-names */
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: { type: String,
-    required: [true, 'Username required'],
-    unique: true },
-  email: { type: String,
-    required: [true, 'Email required'],
-    unique: true },
-  links: { type: [mongoose.Schema.Types.ObjectId], ref: 'Link', default: [] },
-});
+  email: { type: String, required: [true, 'Email required'], unique: true },
+  name: { type: String, required: [true, 'Full name required'] },
+  avatar: { type: String, default: '' },
+  followers: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
+  followings: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
+  password: { type: String, required: [true, 'Password required'] },
+  locked: { type: Boolean, default: false },
+  role: { type: String, default: 'author', enum: ['admin', 'author'] },
+}, { timestamps: { createdAt: true, updatedAt: false } });
 
 module.exports = mongoose.model('User', userSchema);

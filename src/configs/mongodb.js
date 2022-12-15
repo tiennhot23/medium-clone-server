@@ -3,7 +3,5 @@ module.exports = {
   mongoDbOptions: {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
   },
 };

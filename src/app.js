@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-redisSessionStore(app);
+// redisSessionStore(app);
 graphql(app);
 mongoose();
 

@@ -19,32 +19,29 @@ class Logger {
     }
   }
 
-  log(level, message, ...args) {
-    const extras = args.map(v => JSON.stringify(v));
+  log(level, message, error) {
     logger.log(
       level,
       (new Date()).toISOString(),
-      args.length === 0
-        ? `${Colors[level]}${message}\x1b[0m`
-        : `${Colors[level]}${message} - meta: ${JSON.stringify(extras)}\x1b[0m`,
-      // extras,
+      `${Colors[level]}${message}\x1b[0m`,
+      error ? `${Colors[level]} - meta: ${error}\x1b[0m` : '',
     );
   }
 
-  info(message, ...args) {
-    this.log('info', message, ...args);
+  info(message, error) {
+    this.log('info', message, error);
   }
 
-  debug(message, ...args) {
-    this.log('debug', message, ...args);
+  debug(message, error) {
+    this.log('debug', message, error);
   }
 
-  warn(message, ...args) {
-    this.log('warn', message, ...args);
+  warn(message, error) {
+    this.log('warn', message, error);
   }
 
-  error(message, ...args) {
-    this.log('error', message, ...args);
+  error(message, error) {
+    this.log('error', message, error);
   }
 }
 

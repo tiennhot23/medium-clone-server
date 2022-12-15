@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-const { redis } = require('../services');
+const { redis } = require('ioredis');
 
 async function keyScan(pattern, count = 20) {
   const result = [];

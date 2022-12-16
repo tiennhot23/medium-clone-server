@@ -16,7 +16,8 @@ async function login(parent, { email, password }) {
     }
     return new MutationResponse('Accepted');
   } catch (error) {
-    throw new AppError(500, error.message);
+    if (error instanceof AppError) throw error;
+    else throw new AppError(500, error.message);
   }
 }
 
@@ -29,14 +30,15 @@ async function createUser(parent, { name, email, password, repeatPassword }) {
     if (error) throw new AppError(400, error.message);
 
     if (await UserModel.exists({ email })) {
-      throw new AppError(400, 'Username or email is already used');
+      throw new AppError(400, 'Email is already used');
     }
     const hashPassword = await bcrypt.hash(password, encryptConfig.saltRound);
     await UserModel.create({ email, name, password: hashPassword });
 
     return new MutationResponse('Account created');
   } catch (error) {
-    throw new AppError(500, error.message);
+    if (error instanceof AppError) throw error;
+    else throw new AppError(500, error.message);
   }
 }
 

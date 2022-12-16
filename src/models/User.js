@@ -9,6 +9,6 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: [true, 'Password required'] },
   locked: { type: Boolean, default: false },
   role: { type: String, default: 'author', enum: ['admin', 'author'] },
-}, { timestamps: { createdAt: true, updatedAt: false } });
+});
 
 module.exports = mongoose.model('User', userSchema);

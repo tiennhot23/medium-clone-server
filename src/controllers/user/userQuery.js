@@ -8,7 +8,8 @@ async function getUser(parent, { email }) {
     }
     return user;
   } catch (error) {
-    throw new AppError(500, error.message);
+    if (error instanceof AppError) throw error;
+    else throw new AppError(500, error.message);
   }
 }
 

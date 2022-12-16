@@ -1,4 +1,4 @@
-const BlogModel = require('./blog');
-const UserModel = require('./user');
+const BlogModel = require('./Blog');
+const UserModel = require('./User');
 
 module.exports = { UserModel, BlogModel };

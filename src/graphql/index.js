@@ -1,6 +1,7 @@
 const { ApolloServer, AuthenticationError } = require('apollo-server-express');
 const typeDefs = require('./schema');
 const resolvers = require('./resolver');
+const loaders = require('./loaders');
 
 const server = new ApolloServer({
   typeDefs,
@@ -13,6 +14,7 @@ const server = new ApolloServer({
       req,
       res,
       user,
+      loaders,
     };
   },
   formatError: err => {

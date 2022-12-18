@@ -4,8 +4,8 @@ require('./global');
 const express = require('express');
 
 const graphql = require('./graphql');
-const mongoose = require('./loaders/mongoose');
-const redisSessionStore = require('./loaders/redisSessionStore');
+const mongoose = require('./services/mongoose');
+const redisSessionStore = require('./services/redisSessionStore');
 
 const app = express();
 

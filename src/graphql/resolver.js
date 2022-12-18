@@ -6,6 +6,8 @@ const {
   getUser,
   getBlog,
   getBlogClaps,
+  getAuthor,
+  getBlogs,
 } = require('../controllers');
 
 const resolvers = {
@@ -13,6 +15,7 @@ const resolvers = {
   },
 
   Blog: {
+    author: getAuthor,
     claps: getBlogClaps,
   },
 
@@ -20,6 +23,7 @@ const resolvers = {
   Query: {
     user: getUser,
     blog: getBlog,
+    blogs: getBlogs,
   },
 
   Mutation: {

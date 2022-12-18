@@ -1,5 +1,5 @@
 const graphqlFields = require('graphql-fields');
-const { BlogModel, UserModel } = require('../../models');
+const { BlogModel } = require('../../models');
 
 async function getBlog(parent, { blogId }, context, info) {
   const projection = Object.keys(graphqlFields(info));
@@ -10,15 +10,20 @@ async function getBlog(parent, { blogId }, context, info) {
   return blog;
 }
 
-async function getBlogClaps({ claps }, args, context, info) {
-  /* *
-    * be careful if graphql schema include sensitive fields
-    */
+async function getBlogs(parent, args, context, info) {
   const projection = Object.keys(graphqlFields(info));
-  const users = await UserModel.find({
-    _id: { $in: claps },
-  }, projection).lean();
-  return users;
+  const blogs = await BlogModel.find({}, projection).lean();
+  return blogs;
 }
 
-module.exports = { getBlog, getBlogClaps };
+async function getBlogClaps({ claps }, args, { loaders }) {
+  const { userLoader } = loaders;
+  return userLoader.loadMany(claps);
+}
+
+async function getAuthor({ author }, args, { loaders }) {
+  const { userLoader } = loaders;
+  return userLoader.load(author);
+}
+
+module.exports = { getBlog, getBlogClaps, getAuthor, getBlogs };

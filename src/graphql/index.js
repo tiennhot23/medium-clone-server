@@ -1,18 +1,17 @@
-const Redis = require('ioredis');
 const { ApolloServer, AuthenticationError } = require('apollo-server-express');
 const typeDefs = require('./schema');
 const resolvers = require('./resolver');
 const loaders = require('./loaders');
+const { caching } = require('../utils');
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req, res }) => {
-    const redis = new Redis();
     const context = {
       req,
       res,
-      redis,
+      caching,
       loaders,
     };
 
@@ -20,10 +19,10 @@ const server = new ApolloServer({
     if (uid && deviceid) {
       // handle session expiration
       const requestSessionID = `sess:${sid}`;
-      const storageSessionID = await redis.hget(`user:${uid}:sessions`, `${deviceid}`);
+      const storageSessionID = await caching.call('hget', `user:${uid}:sessions`, `${deviceid}`);
 
       if (!storageSessionID || storageSessionID !== requestSessionID) {
-        await redis.hdel(`user:${uid}:sessions`, `${deviceid}`);
+        await caching.call('hdel', `user:${uid}:sessions`, `${deviceid}`);
         req.session.destroy();
         res.clearCookie('uid');
         res.clearCookie('deviceid');
@@ -32,19 +31,19 @@ const server = new ApolloServer({
       }
 
       if (sid !== req.sessionID) {
-        await redis.hset(`user:${uid}:sessions`, `${deviceid}`, `sess:${req.sessionID}`);
+        await caching.call('hset', `user:${uid}:sessions`, `${deviceid}`, `sess:${req.sessionID}`);
         req.session.userId = uid;
       }
 
       // authenticate user
-      const cachedUser = JSON.parse(await redis.get(uid));
+      const cachedUser = JSON.parse(await caching.call('get', uid));
       if (!cachedUser) {
         const { userLoader } = loaders;
         const user = await userLoader.load(uid);
         if (!user) {
           throw new AuthenticationError('Cannot authorized');
         } else {
-          await redis.set(uid, JSON.stringify(user));
+          await caching.callType('user', 'set', uid, user);
           context.user = user;
         }
       } else {

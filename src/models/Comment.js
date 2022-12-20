@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, 'Owner required'] },
+  owner: {
+    type: {
+      _id: mongoose.Schema.Types.ObjectId,
+      name: String,
+      avatar: String,
+    },
+    required: [true, 'Owner required'],
+  },
   content: { type: String, required: [true, 'Content required'] },
   clapCount: { type: Number, default: 0 },
   replies: { type: [mongoose.Schema.Types.ObjectId], ref: 'Comment', default: [] },

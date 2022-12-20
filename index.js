@@ -8,7 +8,8 @@ const server = app.listen(config.port, () => {
 });
 
 const handleUnexpectedException = err => {
-  logger.error('UNEXPECT EXCEPTION::', err.message);
+  console.log(err);
+  logger.error(`UNEXPECT EXCEPTION::${err.message}`);
   process.exit(1);
 };
 

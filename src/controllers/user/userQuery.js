@@ -1,13 +1,16 @@
-const graphqlFields = require('graphql-fields');
 const { UserModel } = require('../../models');
 
-async function getUser(parent, { email }, __, info) {
-  const projection = Object.keys(graphqlFields(info));
-  const user = await UserModel.findOne({ email }, projection).lean();
-  if (!user) {
-    throw new AppError(404, 'Can\'t find this user');
+async function getUser(parent, { userId }, { redis }) {
+  const cachedUser = JSON.parse(await redis.get(userId));
+  if (!cachedUser) {
+    const user = await UserModel.findById(userId, '-password -follower -following').lean();
+    if (!user) {
+      throw new AppError(404, 'Can\'t find this user');
+    }
+    await redis.set(userId, JSON.stringify(user));
+    return user;
   }
-  return user;
+  return cachedUser;
 }
 
 module.exports = { getUser };

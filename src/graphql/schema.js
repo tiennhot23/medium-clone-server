@@ -1,5 +1,5 @@
 const { gql } = require('apollo-server-express');
-const { typeDef: MutationResponseTypeDef } = require('./types/MutationResponse');
+const { MutationResponseTypeDef } = require('./types');
 
 const typeDefs = gql`
   type User {
@@ -33,7 +33,7 @@ const typeDefs = gql`
 
   # ROOT TYPE
   type Query {
-    user(email: String!): User
+    user(userId: String!): User
     blog(blogId: String!): Blog
     blogs: [Blog]
   }
@@ -41,7 +41,8 @@ const typeDefs = gql`
   type Mutation {
     createUser(email: String!, name: String!, password: String!, repeatPassword: String!): MutationResponse
     login(email: String!, password: String!): MutationResponse
-    createBlog(title: String!, rawText: String!): MutationResponse,
+    logout: MutationResponse
+    createBlog(title: String!, rawText: String!): Blog,
     clapBlog(blogId: String!, clapCount: Int!): Blog
   }
 

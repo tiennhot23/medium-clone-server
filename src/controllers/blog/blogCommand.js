@@ -1,22 +1,23 @@
 const graphqlFields = require('graphql-fields');
 const { BlogModel } = require('../../models');
-const { MutationResponse } = require('../../graphql/types/MutationResponse');
 
 async function clapBlog(parent, { blogId, clapCount }, { user }, info) {
+  if (!user) throw new AppError(403, 'Please login to continue');
   const projection = Object.keys(graphqlFields(info));
   const blog = await BlogModel.findOneAndUpdate(
     { _id: blogId },
     { $inc: { clapCount }, $addToSet: { claps: user._id } },
     { new: true, projection },
-  );
+  ).lean();
 
   return blog;
 }
 
 async function createBlog(parent, { title, rawText }, { user }) {
-  await BlogModel.create({ author: user._id, title, rawText });
+  if (!user) throw new AppError(403, 'Please login to continue');
+  const blog = await BlogModel.create({ author: user._id, title, rawText });
 
-  return new MutationResponse('Blog created');
+  return blog;
 }
 
 module.exports = { createBlog, clapBlog };

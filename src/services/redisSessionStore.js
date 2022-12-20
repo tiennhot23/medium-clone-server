@@ -1,5 +1,5 @@
 const session = require('express-session');
-const redis = require('ioredis');
+const Redis = require('ioredis');
 const ConnectRedis = require('connect-redis');
 
 const configs = require('../configs');
@@ -19,9 +19,10 @@ module.exports = app => {
       httpOnly: true, // minimizes the risk of client-side scripts access cookie. `document.cookie`
     },
     store: new RedisStore({
-      client: redis,
+      client: new Redis(),
       url: configs.redis.session.url,
-      ttl: configs.session.ttl, // second
+      ttl: configs.session.ttl, // second,
+      disableTouch: true,
     }),
     // genid(req) {
     //   return yourGenSessionIDFunction(); // Provide a function that returns a session ID

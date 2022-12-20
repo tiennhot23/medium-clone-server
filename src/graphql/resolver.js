@@ -1,6 +1,7 @@
 const {
   createUser,
   login,
+  logout,
   createBlog,
   clapBlog,
   getUser,
@@ -29,6 +30,7 @@ const resolvers = {
   Mutation: {
     createUser,
     login,
+    logout,
     createBlog,
     clapBlog,
   },

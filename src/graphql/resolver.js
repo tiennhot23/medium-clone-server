@@ -2,37 +2,42 @@ const {
   createUser,
   login,
   logout,
-  createBlog,
-  clapBlog,
+  clapPost,
+  createPost,
+
   getUser,
-  getBlog,
-  getBlogClaps,
-  getAuthor,
-  getBlogs,
+  getCreator,
+  getPostClaps,
+  getPost,
+  getPosts,
 } = require('../controllers');
 
 const resolvers = {
   User: {
   },
 
-  Blog: {
-    author: getAuthor,
-    claps: getBlogClaps,
+  Post: {
+    creator: getCreator,
+    claps: getPostClaps,
+  },
+
+  Paragraph: {
+
   },
 
   // QUERY
   Query: {
     user: getUser,
-    blog: getBlog,
-    blogs: getBlogs,
+    post: getPost,
+    posts: getPosts,
   },
 
   Mutation: {
     createUser,
     login,
     logout,
-    createBlog,
-    clapBlog,
+    createPost,
+    clapPost,
   },
 };
 

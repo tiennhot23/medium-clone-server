@@ -3,7 +3,7 @@ const { MutationResponseTypeDef } = require('./types');
 
 const typeDefs = gql`
   type User {
-    _id: String!
+    _id: String
     name: String
     email: String
     avatar: String
@@ -13,37 +13,59 @@ const typeDefs = gql`
     role: String
   }
 
-  type Blog {
-    _id: String!
+  type Post {
+    _id: String
     title: String
-    author: User
-    rawText: String
+    previewImage: String
+    creator: User
+    publishTime: Int
+    visibility: String
     clapCount: Int
+    depth: Int
     claps: [User!]
-    comments: [Comment!]
+    responses: [Post!]
   }
 
-  type Comment {
+  type Paragraph {
     _id: String!
-    owner: String,
-    content: String
-    clapCount: Int
-    replies: [Comment!]
+    text: String
+    type: String
+    markups: [Markup!]
+  }
+
+  type Markup {
+    start: Number
+    end: Number
+    href: String
+    type: String
   }
 
   # ROOT TYPE
   type Query {
     user(userId: String!): User
-    blog(blogId: String!): Blog
-    blogs: [Blog]
+    post(postId: String!): Post
+    posts: [Post]
   }
 
   type Mutation {
     createUser(email: String!, name: String!, password: String!, repeatPassword: String!): MutationResponse
     login(email: String!, password: String!): MutationResponse
     logout: MutationResponse
-    createBlog(title: String!, rawText: String!): Blog,
-    clapBlog(blogId: String!, clapCount: Int!): Blog
+    createPost(paragraphs: [ParagraphInput!]!): Post,
+    clapPost(postId: String!, clapCount: Int!): Post,
+  }
+
+  input ParagraphInput {
+    text: String!
+    type: String = 'p'
+    markups: [MarkupInput!] = []
+  }
+
+  input MarkupInput {
+    start: Number!
+    end: Number!
+    href: String = ''
+    type: String!
   }
 
   interface IMutationResponse {

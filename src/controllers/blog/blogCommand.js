@@ -1,23 +1,31 @@
+const _ = require('lodash');
 const graphqlFields = require('graphql-fields');
-const { BlogModel } = require('../../models');
+const { ParagraphModel, PostModel } = require('../../models');
 
-async function clapBlog(parent, { blogId, clapCount }, { user }, info) {
+async function clapPost(parent, { postId, clapCount }, { user }, info) {
   if (!user) throw new AppError(403, 'Please login to continue');
   const projection = Object.keys(graphqlFields(info));
-  const blog = await BlogModel.findOneAndUpdate(
-    { _id: blogId },
+  const post = await PostModel.findOneAndUpdate(
+    { _id: postId },
     { $inc: { clapCount }, $addToSet: { claps: user._id } },
     { new: true, projection },
   ).lean();
 
-  return blog;
+  return post;
 }
 
-async function createBlog(parent, { title, rawText }, { user }) {
+// NOTE: draft post no need to cache, choose an redis data structure to cache post with publistTime
+async function createPost(parent, { paragraphs }, { user }) {
   if (!user) throw new AppError(403, 'Please login to continue');
-  const blog = await BlogModel.create({ author: user._id, title, rawText });
 
-  return blog;
+  const content = await ParagraphModel.insertMany(paragraphs, {
+    lean: true, // skip hydrating and validating
+  });
+  const title = _.get(content[0], 'text');
+  const previewImage = _.get(_.filter(content, para => para.type === 'img')[0], 'text');
+  const post = await PostModel.create({ creator: user._id, title, previewImage });
+
+  return post;
 }
 
-module.exports = { createBlog, clapBlog };
+module.exports = { createPost, clapPost };

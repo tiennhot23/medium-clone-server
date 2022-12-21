@@ -1,4 +1,5 @@
-const BlogModel = require('./Blog');
+const PostModel = require('./Post');
 const UserModel = require('./User');
+const ParagraphModel = require('./Paragraph');
 
-module.exports = { UserModel, BlogModel };
+module.exports = { UserModel, PostModel, ParagraphModel };

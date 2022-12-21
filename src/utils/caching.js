@@ -4,10 +4,10 @@ const _ = require('lodash');
 const redis = new Redis();
 
 const userCacheFields = ['_id', 'email', 'name', 'avatar', 'locked', 'role'];
-const blogCacheFields = ['_id', 'title', 'author'];
+const postCacheFields = ['_id', 'title', 'previewImage', 'creator', 'publishTime', 'clapCount'];
 const typeCache = {
   user: userCacheFields,
-  blog: blogCacheFields,
+  post: postCacheFields,
 };
 
 async function callType(type, command, ...params) {

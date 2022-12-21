@@ -1,29 +1,29 @@
 const graphqlFields = require('graphql-fields');
-const { BlogModel } = require('../../models');
+const { PostModel } = require('../../models');
 
-async function getBlog(parent, { blogId }, context, info) {
+async function getPost(parent, { postId }, context, info) {
   const projection = Object.keys(graphqlFields(info));
-  const blog = await BlogModel.findById(blogId, projection).lean();
-  if (!blog) {
-    throw new AppError(404, 'Can\'t find this blog');
+  const post = await PostModel.findById(postId, projection).lean();
+  if (!post) {
+    throw new AppError(404, 'Can\'t find this post');
   }
-  return blog;
+  return post;
 }
 
-async function getBlogs(parent, args, context, info) {
+async function getPosts(parent, args, context, info) {
   const projection = Object.keys(graphqlFields(info));
-  const blogs = await BlogModel.find({}, projection).lean();
-  return blogs;
+  const posts = await PostModel.find({}, projection).lean();
+  return posts;
 }
 
-async function getBlogClaps({ claps }, args, { loaders }) {
+async function getPostClaps({ claps }, args, { loaders }) {
   const { userLoader } = loaders;
   return userLoader.loadMany(claps);
 }
 
-async function getAuthor({ author }, args, { loaders }) {
+async function getCreator({ creator }, args, { loaders }) {
   const { userLoader } = loaders;
-  return userLoader.load(author);
+  return userLoader.load(creator);
 }
 
-module.exports = { getBlog, getBlogClaps, getAuthor, getBlogs };
+module.exports = { getPost, getPostClaps, getCreator, getPosts };
